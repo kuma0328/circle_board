@@ -6,7 +6,7 @@ type Circle struct {
 	ImageURL  string
 	Genre     string
 	Location  string
-	Member    string
+	Member    int64
 	Twitter   string
 	Instagram string
 }

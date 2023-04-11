@@ -5,33 +5,33 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kuma0328/circle_board/domain/entity"
+	"github.com/kuma0328/circle_board/presentation/jsonutil"
 	"github.com/kuma0328/circle_board/usecase"
 )
 
 type CircleHandler struct {
-	uc usecase.CircleUsecase
+	uc usecase.ICircleUsecase
 }
 
-func NewCircleHandler(uc usecase.CircleUsecase) *CircleHandler {
+func NewCircleHandler(uc usecase.ICircleUsecase) *CircleHandler {
 	return &CircleHandler{
 		uc: uc,
 	}
 }
 
 func (h *CircleHandler) CreateCircle(c *gin.Context) {
-	var circle entity.Circle
-	if err := c.BindJSON(&circle); err != nil {
+	var circleJson jsonutil.CircleJson
+	if err := c.BindJSON(&circleJson); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 
-	if err := h.uc.CreateCircle(&circle); err != nil {
+	if err := h.uc.CreateCircle(jsonutil.CircleJsonToEntity(&circleJson)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, circle)
+	c.JSON(http.StatusCreated, circleJson)
 }
 
 func (h *CircleHandler) GetAllCircle(c *gin.Context) {

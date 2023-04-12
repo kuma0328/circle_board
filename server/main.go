@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/kuma0328/circle_board/config"
 	"github.com/kuma0328/circle_board/infrastructure/database"
@@ -21,13 +20,8 @@ func main() {
 	defer conn.DB.Close()
 
 	// routerを初期化
-	router := router.InitRouter(conn)
-
-	// portを取得
-	port, ok := os.LookupEnv("PORT")
-	if !ok {
-		log.Fatal("PORT is not set")
-	}
-	// サーバーを起動
-	router.Run(fmt.Sprintf(":%s", port))
+	r := router.NewRouter()
+	
+	// Routerの起動
+	r.Serve()
 }
